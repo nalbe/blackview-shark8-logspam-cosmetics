@@ -1,0 +1,14 @@
+# GSI mixing cosmetics: system_app probing radio hwservices that this
+# vendor does not provide (samsung/spreadtrum/huawei/qti ifaces) lands on
+# default_android_hwservice and floods auditd with find denials.
+allow system_app default_android_hwservice:hwservice_manager find
+
+# vendor fingerprint HAL probing nonexistent oppo/oplus hwservices.
+allow hal_fingerprint_oppo_compat default_android_hwservice:hwservice_manager find
+
+# recurring process-getattr audit spam from system_server and vold on GSI mix.
+allow system_server radio:process getattr
+allow system_server gmscore_app:process getattr
+allow system_server platform_app:process getattr
+allow system_server device_as_webcam:process getattr
+allow vold system_server:process getattr
