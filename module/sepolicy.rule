@@ -1,14 +1,60 @@
 # GSI mixing cosmetics: system_app probing radio hwservices that this
 # vendor does not provide (samsung/spreadtrum/huawei/qti ifaces) lands on
 # default_android_hwservice and floods auditd with find denials.
-allow system_app default_android_hwservice:hwservice_manager find
+allow system_app default_android_hwservice hwservice_manager find
+allow system_app default_android_service service_manager find
+allow system_server default_android_hwservice hwservice_manager find
+allow system_server default_android_service service_manager find
+allow radio default_android_hwservice hwservice_manager find
+allow radio default_android_service service_manager find
+allow surfaceflinger default_android_hwservice hwservice_manager find
+allow hal_fingerprint_oppo_compat default_android_hwservice hwservice_manager find
 
 # vendor fingerprint HAL probing nonexistent oppo/oplus hwservices.
-allow hal_fingerprint_oppo_compat default_android_hwservice:hwservice_manager find
+# (hal_fingerprint_oppo_compat handled above)
 
-# recurring process-getattr audit spam from system_server and vold on GSI mix.
-allow system_server radio:process getattr
-allow system_server gmscore_app:process getattr
-allow system_server platform_app:process getattr
-allow system_server device_as_webcam:process getattr
-allow vold system_server:process getattr
+# recurring process-getattr audit spam from system_server on GSI mix.
+allow system_server radio process getattr
+allow system_server gmscore_app process getattr
+allow system_server platform_app process getattr
+allow system_server priv_app process getattr
+allow system_server untrusted_app process getattr
+allow system_server bluetooth process getattr
+allow system_server system_app process getattr
+allow system_server device_as_webcam process getattr
+allow system_server audioserver process getattr
+allow system_server cameraserver process getattr
+allow system_server mediaextractor process getattr
+allow system_server mediametrics process getattr
+allow system_server mediaprovider_app process getattr
+allow system_server mediaserver process getattr
+allow system_server mtk_hal_gnss process getattr
+allow system_server netd process getattr
+allow system_server network_stack process getattr
+allow system_server nfc process getattr
+allow system_server permissioncontroller_app process getattr
+allow system_server secure_element process getattr
+allow system_server shared_relro process getattr
+allow system_server statsd process getattr
+allow system_server surfaceflinger process getattr
+allow surfaceflinger platform_app process getattr
+allow surfaceflinger bootanim process getattr
+allow surfaceflinger system_app process getattr
+allow surfaceflinger system_server process getattr
+allow mtk_hal_power surfaceflinger process getattr
+allow mtk_hal_power system_server process getattr
+allow vold system_server process getattr
+allow vold apexd process getattr
+allow vold vdc process getattr
+
+# surfaceflinger binder getattr noise on app domains.
+allow surfaceflinger priv_app process getattr
+allow surfaceflinger untrusted_app process getattr
+
+# system_server probing mediaprovider + su (rooted adb) domains.
+allow system_server mediaprovider process getattr
+allow system_server mediaprovider_app process getattr
+allow system_server su process getattr
+
+# system_server CachedAppOptimizer writing to zygote tmpfs (GSI mix).
+allow system_server zygote_tmpfs file write
